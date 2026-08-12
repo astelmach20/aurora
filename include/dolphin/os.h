@@ -73,8 +73,8 @@ typedef struct {
 
 extern uintptr_t OSBaseAddress;
 
-#define OS_BASE_CACHED   (OSBaseAddress)
-#define OS_BASE_UNCACHED (OSBaseAddress)
+#define OS_BASE_CACHED   (OS_CACHED_REGION_PREFIX << 16)
+#define OS_BASE_UNCACHED (OS_UNCACHED_REGION_PREFIX << 16)
 
 #ifdef __MWERKS__
 u32 __OSPhysicalMemSize AT_ADDRESS(OS_BASE_CACHED | 0x0028);
