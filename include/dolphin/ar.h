@@ -7,7 +7,9 @@
 extern "C" {
 #endif
 
-typedef void (*ARQCallback)(uintptr_t pointerToARQRequest);
+struct ARQRequest;
+
+typedef void (*ARQCallback)(struct ARQRequest*);
 
 struct ARQRequest {
     /* 0x00 */ struct ARQRequest *next;
