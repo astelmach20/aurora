@@ -35,6 +35,16 @@ void GXEnableTexOffsets(GXTexCoordID coord, GXBool line_enable, GXBool point_ena
 #ifdef TARGET_PC
 void GXSetArray(GXAttr attr, const void* data, u32 size, u8 stride, bool le);
 #define GXSETARRAY(attr, data, size, stride, le) GXSetArray((attr), (data), (size), (stride), (le))
+#ifdef MELEE_DECOMP_COMPAT
+// doldecomp/melee calls the SDK's 3-argument GXSetArray(attr, data, stride). Dispatch on
+// argument count so those call sites compile unchanged; size is unknown at the call site
+// (0 = "unbounded"), data is big-endian GameCube memory. TODO(phase 1): pass real sizes.
+static inline void GXSetArray3_(GXAttr attr, const void* data, u8 stride) {
+  (GXSetArray)(attr, data, 0u, stride, false);
+}
+#define GX_SETARRAY_PICK_(_1, _2, _3, _4, _5, NAME, ...) NAME
+#define GXSetArray(...) GX_SETARRAY_PICK_(__VA_ARGS__, (GXSetArray), GX_SETARRAY_BAD_ARITY_, GXSetArray3_)(__VA_ARGS__)
+#endif
 #else
 void GXSetArray(GXAttr attr, const void* data, u8 stride);
 #define GXSETARRAY(attr, data, size, stride, le) GXSetArray((attr), (data), (stride))

@@ -244,6 +244,11 @@ s32 CARDRenameAsync(s32 chan, const char* oldName, const char* newName, CARDCall
 // CARDBios
 #if TARGET_PC
 void CARDInit(const char* game, const char* maker);
+#ifdef MELEE_DECOMP_COMPAT
+// The decomp calls the SDK's zero-argument CARDInit(); Melee's game/maker codes are GALE/01.
+static inline void CARDInit0_(void) { (CARDInit)("GALE", "01"); }
+#define CARDInit() CARDInit0_()
+#endif
 void CARDSetGameAndMaker(const s32 chan, const char* game, const char* maker);
 
 // pass -1 to set both
